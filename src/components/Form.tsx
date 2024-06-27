@@ -1,13 +1,8 @@
-import { useState, useEffect, ChangeEvent, FormEvent, Dispatch } from "react"
+import { useState, useEffect, ChangeEvent, FormEvent } from "react"
 import { v4 as uuidv4 } from "uuid"
 import { categories } from "../data/categories"
 import type { Activity } from "../types"
-import { ActivityActions, ActivityState } from "../reducers/activity-reducer"
-
-type FormProps = {
-  dispatch: Dispatch<ActivityActions>,
-  state: ActivityState
-}
+import { useActivity } from "../hooks/useActivity"
 
 const initialState: Activity = {
   id: uuidv4(),
@@ -16,7 +11,9 @@ const initialState: Activity = {
   calories: 0
 }
 
-export default function Form({dispatch, state} : FormProps) {
+export default function Form() {
+
+  const { state, dispatch } = useActivity()
 
   const[activity, setActivity] = useState<Activity>(initialState)
 
@@ -58,7 +55,7 @@ export default function Form({dispatch, state} : FormProps) {
     onSubmit={handleSubmit}
 	>
     <div className="grid grid-cols-1 gap-3">
-      <label htmlFor="category" className="font-bold">Categoría:</label>
+      <label htmlFor="category" className="font-bold">Category:</label>
       <select
         className="border border-slate-300 p-2 rounded-lg w-full bg-white"
         id="category"
@@ -77,19 +74,19 @@ export default function Form({dispatch, state} : FormProps) {
     </div>
 
     <div className="grid grid-cols-1 gap-3">
-      <label htmlFor="name" className="font-bold">Actividad:</label>
+      <label htmlFor="name" className="font-bold">Activity:</label>
       <input
         id="name"
         type="text"
         className="border border-slate-300 p-2 rounded-lg"
-        placeholder="Ej. Comida, Jugo de naranja, Ensalada, Ejercicio, Pesas"
+        placeholder="E.g. Lunch, Orange Juice, Salad, Exercise, Weights"
         value={activity.name}
         onChange={handleChange}
       />
     </div>
 
     <div className="grid grid-cols-1 gap-3">
-      <label htmlFor="calories" className="font-bold">Calorias:</label>
+      <label htmlFor="calories" className="font-bold">Calories:</label>
       <input
         id="calories"
         type="number"
@@ -103,7 +100,7 @@ export default function Form({dispatch, state} : FormProps) {
     <input
       type="submit"
       className="bg-gray-800 hover:bg-gray-900 w-full p-2 font-bold uppercase text-white cursor-pointer disabled:opacity-10"
-      value={activity.category === 1 ? 'Guardar comida' : 'Guardar ejercicio'}
+      value={activity.category === 1 ? 'Save food' : 'Save exercise'}
       disabled={!isValidActivity()}
     />
 
